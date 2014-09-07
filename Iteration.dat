@@ -1,17 +1,21 @@
-UnivariateSAR<-function(DV.name, DataFrame, Neighbour){
-	#Define the number of DVs in the DataFrame, IVs are always at the front of the DataFrame
-	N<-2
-	
-	
-	for(i in 1:ncol(DataFrame))
+UnivariateSAR<-function(DVname, DataFrame, Neighbour, startIVcolnum, endIVcolnum){
+	#Spatial Regression Decision tree on dataframe for a dependent variable
+	#DVname: Name of dependent variable column
+	#DataFrame: R data frame/table
+	#Neighbour: spatial weights matrix file from Geoda. from spdep read.gal or read.gwt2nb, left as type nb
+	#startIVcolnum: starting column number for the independent variables to be tested for univariate regression
+	#endIVcolnum: ending column number for the independent variables to be tested for univariate regression
+		
+	for(i in startIVcolnum:endIVcolnum)
 	{
-		variable<-colnames(DataFrame)[i]
-		formulaReg<-formula(paste(DV.name, "~",variable))
+		IV<-colnames(DataFrame)[i]
+		formulaReg<-formula(paste(DVname, "~",IV))
 
-		Outputname<-paste(DV.name,"|",variable,".txt", sep="")
+		Outputname<-paste(DVname,"_x_",IV,".txt", sep="")
 
 		#Run Spatial Regression Decision Function
-
+		
+		cat("/nRunning Spatial Regression Decision with ", formulaReg)
 		SpatialRegressionDecision(formulaReg, DataFrame, Neighbour, Outputname)
 	}
 	
