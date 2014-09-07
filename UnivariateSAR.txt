@@ -15,7 +15,7 @@ UnivariateSAR<-function(DVname, DataFrame, Neighbour, startIVcolnum, endIVcolnum
 
 		#Run Spatial Regression Decision Function
 		
-		cat("/nRunning Spatial Regression Decision with ", formulaReg)
+		cat("\nRunning Spatial Regression Decision with ", formulaReg)
 		SpatialRegressionDecision(formulaReg, DataFrame, Neighbour, Outputname)
 	}
 	
