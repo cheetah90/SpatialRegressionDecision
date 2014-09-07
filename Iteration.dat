@@ -1,0 +1,18 @@
+UnivariateSAR<-function(DV.name, DataFrame, Neighbour){
+	#Define the number of DVs in the DataFrame, IVs are always at the front of the DataFrame
+	N<-2
+	
+	
+	for(i in 1:ncol(DataFrame))
+	{
+		variable<-colnames(DataFrame)[i]
+		formulaReg<-formula(paste(DV.name, "~",variable))
+
+		Outputname<-paste(DV.name,"|",variable,".txt", sep="")
+
+		#Run Spatial Regression Decision Function
+
+		SpatialRegressionDecision(formulaReg, DataFrame, Neighbour, Outputname)
+	}
+	
+}
