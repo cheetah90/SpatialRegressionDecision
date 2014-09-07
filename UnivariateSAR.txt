@@ -1,5 +1,5 @@
 UnivariateSAR<-function(DVname, DataFrame, Neighbour, startIVcolnum, endIVcolnum){
-	#Spatial Regression Decision tree on dataframe for a dependent variable
+	#Spatial Regression Decision tree on dataframe for a dependent variable and a single independent variable
 	#DVname: Name of dependent variable column
 	#DataFrame: R data frame/table
 	#Neighbour: spatial weights matrix file from Geoda. from spdep read.gal or read.gwt2nb, left as type nb
