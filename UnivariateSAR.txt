@@ -21,9 +21,6 @@ UnivariateSAR<-function(DVname, DataFrame, Neighbour, startIVcolnum, endIVcolnum
 		print(formulaReg)
 		cat("\n")
 		
-		cat("Running Spatial Regression Decision with: ",DVname, "~",IV,file=OutputName, append=FALSE)
-		cat("\n\n\n", file=OutputName, append=TRUE)
-		
 		SpatialRegressionDecision(formulaReg, DataFrame, Neighbour, OutputName)
 		
 		cat("\n\n\n\n\n\n")
