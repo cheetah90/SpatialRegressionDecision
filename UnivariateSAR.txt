@@ -1,8 +1,8 @@
-UnivariateSAR<-function(DVname, DataFrame, Neighbour, startIVcolnum, endIVcolnum){
-	#Spatial Regression Decision tree on dataframe for a dependent variable and a single independent variable
+UnivariateSAR<-function(DVname, DataFrame, Neighbor, startIVcolnum, endIVcolnum){
+	#Spatial Regression Decision tree on dataframe for a dependent variable and a loops through single independent variables
 	#DVname: Name of dependent variable column
 	#DataFrame: R data frame/table
-	#Neighbour: spatial weights matrix file from Geoda. from spdep read.gal or read.gwt2nb, left as type nb
+	#Neighbor: spatial weights matrix file from Geoda. from spdep read.gal or read.gwt2nb, left as type nb
 	#startIVcolnum: starting column number for the independent variables to be tested for univariate regression
 	#endIVcolnum: ending column number for the independent variables to be tested for univariate regression
 		
@@ -21,7 +21,7 @@ UnivariateSAR<-function(DVname, DataFrame, Neighbour, startIVcolnum, endIVcolnum
 		print(formulaReg)
 		cat("\n")
 		
-		SpatialRegressionDecision(formulaReg, DataFrame, Neighbour, OutputName)
+		SpatialRegressionDecision(formulaReg, DataFrame, Neighbor, OutputName)
 		
 		cat("\n\n\n\n\n\n")
 	}
