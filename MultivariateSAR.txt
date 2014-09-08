@@ -1,9 +1,9 @@
-MultivariateSAR<-function(DVname, DataFrame, Neighbour, IVlist, Outputname){
-	#Spatial Regression Decision tree on dataframe for a dependent variable and multiple independent variables
+MultivariateSAR<-function(DVname, DataFrame, Neighbor, IVlist, Outputname){
+	#Spatial Regression Decision tree on dataframe for a dependent variable and multiple independent variables at once
 	#DVname: Name of dependent variable column
 	#DataFrame: R data frame/table
-	#Neighbour: spatial weights matrix file from Geoda. from spdep read.gal or read.gwt2nb, left as type nb
-	#IVlist should resemble "MedAge + BachelorAb + etc."
+	#Neighbor: spatial weights matrix file from Geoda. from spdep read.gal or read.gwt2nb, left as type nb
+	#IVlist should resemble "MedAge + BachelorAb + etc." Variable length.
 	#Outputname = "file.txt"
 	
 	formulaReg<-formula(paste(DVname, "~", IVlist))
@@ -11,6 +11,6 @@ MultivariateSAR<-function(DVname, DataFrame, Neighbour, IVlist, Outputname){
 	#Run Spatial Regression Decision Function
 	
 	cat("\nRunning Spatial Regression Decision with ", paste(formulaReg), "\n")
-	SpatialRegressionDecision(formulaReg, DataFrame, Neighbour, Outputname)
+	SpatialRegressionDecision(formulaReg, DataFrame, Neighbor, Outputname)
 	
 }
