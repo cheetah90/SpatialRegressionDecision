@@ -10,13 +10,19 @@ UnivariateSAR<-function(DVname, DataFrame, Neighbour, startIVcolnum, endIVcolnum
 	{
 		IV<-colnames(DataFrame)[i]
 		formulaReg<-formula(paste(DVname, "~",IV))
+		
+		formulaReg
 
 		Outputname<-paste(DVname,"_x_",IV,".txt", sep="")
 
 		#Run Spatial Regression Decision Function
 		
-		cat("\nRunning Spatial Regression Decision with ", formulaReg)
+		cat("\nRunning Spatial Regression Decision with")
+		print(formulaReg)
+		cat("\n")
 		SpatialRegressionDecision(formulaReg, DataFrame, Neighbour, Outputname)
+		
+		cat("\n\n\n\n\n\n")
 	}
 	
 }
