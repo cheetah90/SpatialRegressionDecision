@@ -1,0 +1,25 @@
+DrawVariableDistribution<-function(DataFrame, startIVcolnum, endIVcolnum){
+	#Function to draw distribution histogram of all variables between @startIVcolnum and @endIVcolnum
+	#Run this function to see if any data transformation need to be done prior to regression analysis
+	
+	#startIVcolnum: the column of first variable to draw
+	#endIVcolnum: the column of last variable to draw
+	
+	for(i in startIVcolnum:endIVcolnum){
+		IV<-colnames(DataFrame)[i]
+		
+		h<-hist(as.numeric(US.States.backup[i][,1]), breaks="FD", freq=FALSE)
+
+		curve(dnorm(x, mean=mean(US.States.backup[i][,1]), sd=sd(US.States.backup[i][,1])), add=TRUE, col="darkblue", lwd=2)
+		
+		OutputName<-paste(deparse(substitute(DataFrame)), paste(IV),".eps", sep="")
+		
+		dev.print(device=postscript, OutputName, onefile=FALSE, horizontal=FALSE)
+		dev.off()
+	}	
+	
+}
+
+
+		h$counts=h$counts/sum(h$counts)
+		plot(h)
