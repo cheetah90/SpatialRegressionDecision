@@ -1,4 +1,7 @@
 SpatialRegressionDecision<-function(Formula, DataFrame, Neighbor, OutputName){
+	#Function to make decision and run the proper spatial regression model
+	
+	#Argument Specification
 	#Runs through logical decision tree for choosing appropriate univariate (spatial) regressions with Wikipedia data
 	#Formula: e.g. CRIME ~ INC + HOVAL
 	#DataFrame: R data frame/table
