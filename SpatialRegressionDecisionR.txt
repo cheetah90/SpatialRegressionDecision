@@ -18,7 +18,7 @@ SpatialRegressionDecision<-function(Formula, DataFrame, Neighbor, OutputName){
 	
 	#Write OLS Regression Result to the file
 	cat("==============================\nOLS Regression Result:\n",file=OutputName, append=TRUE)
-	capture.output(print(OLS),file=OutputName, append=TRUE)
+	capture.output(summary(OLS),file=OutputName, append=TRUE)
 	cat("==============================\n\n\n", file=OutputName, append=TRUE)
 	
 	#Build the spatial weight list
