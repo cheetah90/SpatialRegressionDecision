@@ -10,7 +10,7 @@ MultivariateSAR<-function(DVname, DataFrame, Neighbor, IVlist, Outputname){
 	
 	#Run Spatial Regression Decision Function
 	
-	cat("\nRunning Spatial Regression Decision with ", paste(formulaReg), "\n")
+	cat("\nRunning Spatial Regression Decision with: ", deparse(formulaReg), "\n")
 	SpatialRegressionDecision(formulaReg, DataFrame, Neighbor, Outputname)
 	
 }
