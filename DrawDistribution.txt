@@ -13,9 +13,9 @@ DrawVariableDistribution<-function(DataFrame, startIVcolnum, endIVcolnum){
 
 		curve(dnorm(x, mean=mean(DataFrame[i][,1]), sd=sd(DataFrame[i][,1])), add=TRUE, col="darkblue", lwd=2)
 		
-		OutputName<-paste(deparse(substitute(DataFrame)), paste(IV),".eps", sep="")
+		OutputName<-paste(deparse(substitute(DataFrame)), paste(IV),".pdf", sep="")
 		
-		dev.print(device=postscript, OutputName, onefile=FALSE, horizontal=FALSE)
+		dev.copy2pdf(file=OutputName, onefile=FALSE)
 		dev.off()
 	}	
 	
