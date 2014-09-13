@@ -1,0 +1,26 @@
+AutoMergeWikidata <- function(df_TobeMerged,LangWiki,df_TotalPop, startColumn, endColumn, Name){
+	#This function merges the new Wikidata into the existing data frame.
+	#It first normalized the data using TotalPop data frame and then merge() the dataset using RowNum columns
+	#Suppose the first column of LangWiki is the UID column
+	
+	#@params
+	#df_TobeMerged: the exsiting dataframe to be merged into
+	#LangWiki: Dataframe containing new Wikidata
+	#startColumn: used to define column range LangWiki
+	#endColumn: used to define column range of LangWiki
+	#Name: name to append to for attributes in the LangWiki, should be the {Language} e.g. "ZH"
+	
+	
+	
+	LangWiki[,startColumn:endColumn]<-LangWiki[,startColumn:endColumn]/df_TotalPop$TotalPop
+	
+	LangWiki[,startColumn:endColumn]<-log10(LangWiki[,startColumn:endColumn])
+	
+	LangWiki[,startColumn:endColumn]<-scale(LangWiki[,startColumn:endColumn])
+	
+	Name<-paste("_",Name)
+	
+	df_Merged<-merge(df_TobeMerged, LangWiki, by.x="RowNum", by.y="Universal.ID", sort =TRUE, suffixes = c(".x",Name))
+	
+	df_Merged
+}
