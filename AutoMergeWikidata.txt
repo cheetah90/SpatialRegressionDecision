@@ -20,7 +20,7 @@ AutoMergeWikidata <- function(df_TobeMerged,LangWiki,df_TotalPop, startColumn, e
 	
 	Name<-paste("_",Name)
 	
-	df_Merged<-merge(df_TobeMerged, LangWiki, by.x="RowNum", by.y="Universal.ID", sort =TRUE, suffixes = c(".x",Name))
+	df_Merged<-merge(df_TobeMerged, LangWiki[c(1,startColumn:endColumn)], by.x="RowNum", by.y="Universal.ID", sort =TRUE, suffixes = c(".x",Name))
 	
 	df_Merged
 }
