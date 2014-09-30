@@ -136,6 +136,7 @@ SpatialRegressionDecision<-function(Formula, DataFrame, Neighbor, OutputName, ou
 	
 	SARResult
 	cat(SARResult$type)
+	#Decide if SAR or OLS is run and construct the output Table
 	if(!is.null(SARResult$type))
 	{
 		#If SAR is used, report the result
