@@ -1,4 +1,4 @@
-function(pValue){
+Helper_AssignSignCode<-function(pValue){
   if (pValue < 0.001)
     return("***")
   else if(pValue< 0.01)
