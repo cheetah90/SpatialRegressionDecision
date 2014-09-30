@@ -135,6 +135,16 @@ SpatialRegressionDecision<-function(Formula, DataFrame, Neighbor, OutputName, ou
 	cat("==============================\n\n\n", file=OutputName, append=TRUE)
 	
 	SARResult
-	outTable <- rbind(outTable, c(deparse(SARResult$call),summary(OLS)$adj.r.squared, SARResult$type, SARResult$LL, SARResult$logLik_lm.model, SARResult$SSE, SARResult$lambda, SARResult$lambda.se, SARResult$rho, SARResult$rho.se, "10nn"))
+	if(SARResult$type == "error")
+	{
+		SpatialAutoregressiveCoefficient<-SARResult$lambda
+	}
+	else if(SARResult$type == "lag")
+	{
+		SpatialAutoregressiveCoefficient<-SARResult$rho
+	}
+	
+	#Note that "-" at the beginning of a cell will cause Excel to treat the cell as a formula. To avoid this, a space is added at the beginning of a cell
+	outTable<- rbind(outTable, c(Formula, SARResult$type, SARResult$coefficients[2], summary(OLS)$adj.r.squared, paste0(" ",SARResult$LL,"/", SARResult$logLik_lm.model), paste0(AIC(SARResult),"/",SARResult$AIC_lm.model), SpatialAutoregressiveCoefficient, Wald1.sarlm(SARResult)$statistic,"LRTest"))
 	return(outTable)
 }
