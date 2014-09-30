@@ -28,6 +28,6 @@ UnivariateSAR<-function(DVname, DataFrame, Neighbor, startIVcolnum, endIVcolnum)
 		cat("\n\n\n\n\n\n")
 	}
 	
-	colnames(outTable) <- c("call", "OLS_adj_r2", "type", "loglik", "loglikOLS", "SSE", "lambda_rho", "lambda_rho.se", "spatweights")
+	colnames(outTable) <- c("call", "Model_type", "Estimate(Pvalue)", "OLS_AdjustR^2", "loglik/lm_loglik", "AIC/LM_AIC", "lambda_rho", "Wald_Test", "LR_Test")
 	write.csv(file=paste("UnivariateSAR_", DVname,".csv"),outTable)
 }
