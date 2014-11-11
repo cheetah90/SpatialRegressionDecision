@@ -139,6 +139,14 @@ SpatialRegressionDecision<-function(Formula, DataFrame, Neighbor, OutputName, ou
 	#Decide if SAR or OLS is run and construct the output Table
 	if(!is.null(SARResult$type))
 	{
+		#Parse the DV Name from the formula
+		DVname<-paste0(as.list(attr(terms(Formula), "variables"))[2])
+			
+		#Compute the Pseudo-R^2
+		SARResult.fitted<-fitted.values(SARResult)
+		SARResult.lm<- lm(DataFrame[,DVname] ~ SARResult.fitted)
+		PseudoRSquared<-summary(SARResult.lm)$r.squared
+		
 		#If SAR is used, report the result
 		if(SARResult$type == "error")
 		{
@@ -151,8 +159,8 @@ SpatialRegressionDecision<-function(Formula, DataFrame, Neighbor, OutputName, ou
 	
 		EstimatepValue<-2 * (1 - pnorm(abs(SARResult$coefficients/SARResult$rest.se)))
 	
-		#Note that "-" at the beginning of a cell will cause Excel to treat the cell as a formula. To avoid this, a space is added at the beginning of a cell
-		outTable<- rbind(outTable, c(Formula, SARResult$type, paste0(round(SARResult$coefficients[2],4),Helper_AssignSignCode(EstimatepValue[2])), round(summary(OLS)$adj.r.squared,4), paste0(" ",round(SARResult$LL,4),"/", round(SARResult$logLik_lm.model,4)), paste0(round(AIC(SARResult),4),"/",round(SARResult$AIC_lm.model),4), round(SpatialAutoregressiveCoefficient,4), paste0(round(Wald1.sarlm(SARResult)$statistic,4),Helper_AssignSignCode(Wald1.sarlm(SARResult)$p.value)),paste0(round(LR1.sarlm(SARResult)$statistic,4),Helper_AssignSignCode(LR1.sarlm(SARResult)$p.value))))
+		#Note that "-"/negative sign at the beginning of a cell will cause Excel to treat the cell as a formula. To avoid this, a space is added at the beginning of a cell
+		outTable<- rbind(outTable, c(Formula, SARResult$type, paste0(round(SARResult$coefficients[2],4), Helper_AssignSignCode(EstimatepValue[2])), round(summary(OLS)$adj.r.squared,4), round(PseudoRSquared, 4), paste0(" ",round(SARResult$LL,4),"/", round(SARResult$logLik_lm.model,4)), paste0(round(AIC(SARResult),4),"/",round(SARResult$AIC_lm.model),4), round(SpatialAutoregressiveCoefficient,4), paste0(round(Wald1.sarlm(SARResult)$statistic,4),Helper_AssignSignCode(Wald1.sarlm(SARResult)$p.value)),paste0(round(LR1.sarlm(SARResult)$statistic,4),Helper_AssignSignCode(LR1.sarlm(SARResult)$p.value))))
 		#cat(2 * (1 - pnorm(abs(SARResult$coefficients/SARResult$rest.se))))
 	}
 	else
