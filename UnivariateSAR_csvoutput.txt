@@ -1,4 +1,4 @@
-UnivariateSAR<-function(startDVcolumn, endDVcolumn, DataFrame, Neighbor, startIVcolnum, endIVcolnum){
+UnivariateSAR<-function(DataFrame, Neighbor,startDVcolumn, endDVcolumn, startIVcolnum, endIVcolnum){
 	#Spatial Regression Decision tree on dataframe for a dependent variable and a loops through single independent variables
 
 	#startDVcolumn: the start column number of the Dependent Variable
