@@ -1,0 +1,17 @@
+PrepareUGCData <- function(dfUGC,df_TotalPop, startColumn, endColumn){
+	#This function prepares the data for regression analysis by doing 
+	#1. normalize to per capita 
+	#2. Log transform 
+	#3. Standardize
+	
+	#@params
+	#dfUGC: Dataframe containing new Wikidata of specific languages
+	#df_TotalPop
+	#startColumn: used to define column range of dfUGC
+	#endColumn: used to define column range of dfUGC
+	
+	dfUGC[,startColumn:endColumn]<-dfUGC[,startColumn:endColumn]/df_TotalPop$TotalPop
+	dfUGC[,startColumn:endColumn]<-log10(dfUGC[,startColumn:endColumn])
+	dfUGC[,startColumn:endColumn]<-scale(dfUGC[,startColumn:endColumn])
+	dfUGC
+}
