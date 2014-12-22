@@ -5,6 +5,7 @@ logNormWikipediaData <- function(dataframe, startcolnum, endcolnum, popcolnum) {
 		dataframe[i] <- log10(dataframe[i]/dataframe[popcolnum])
 		realmin <- min(dataframe[dataframe[i] != -Inf, i])
 		dataframe[dataframe[i] == -Inf, i] <- realmin
+		dataframe[i] <- scale(dataframe[i])
 	}
 	
 	return(dataframe)
