@@ -18,8 +18,8 @@ logNormWikipediaData <- function(dfMaster, dfNewVgi, MasterFK, VgiFK, newVgiStar
   #Append total population column of each administrative area
   dfNewVgi <- merge(dfNewVgi, dfMaster[c(MasterFK,TotalPopColName)], by.x=VgiFK, by.y=MasterFK, all.y=TRUE)
   dfNewVgi[is.na(dfNewVgi)] <- 0
-  if (nrowMaster != nrow(dfMerged)) {
-      stop(paste("output missing", nrowMaster - nrow(dfMerged),"rows"))
+  if (nrowMaster != nrow(dfNewVgi)) {
+      stop(paste("output missing", nrowMaster - nrow(dfNewVgi),"rows"))
   }
 
   #Takes log10 transformation, sets zero values to the minimum, and scales the resulting so the mean is set to zero and values correspond to standard deviations
