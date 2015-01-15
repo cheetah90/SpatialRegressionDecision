@@ -38,3 +38,39 @@ logScaleZeroesToMin <- function(dataframe, startcolnum, endcolnum) {
   }
   return(dataframe)
 }
+
+logScaleZeroesToMinPosSkew <- function(dataframe, startcolnum, endcolnum) {
+  #@params
+  #dataframe: R data frame
+  #startcolnum: column index number of first column in dataframe to be transformed
+  #endcolnum: column index number of last column in dataframe to be transformed
+  
+  for(i in startcolnum:endcolnum) {
+    max = max(dataframe[i]) + 1
+    dataframe[i] <- log10(max - dataframe[i])
+    if (identical(min(dataframe[i]),-Inf)) {
+      realmin <- min(dataframe[dataframe[i] != -Inf, i])
+      dataframe[dataframe[i] == -Inf, i] <- realmin
+    }
+    dataframe[i] <- scale(dataframe[i])
+  }
+  return(dataframe)
+}
+
+logScaleZeroesToMinPosSkewSqrt <- function(dataframe, startcolnum, endcolnum) {
+  #@params
+  #dataframe: R data frame
+  #startcolnum: column index number of first column in dataframe to be transformed
+  #endcolnum: column index number of last column in dataframe to be transformed
+  
+  for(i in startcolnum:endcolnum) {
+    max = max(dataframe[i]) + 1
+    dataframe[i] <- sqrt(max - dataframe[i])
+    if (identical(min(dataframe[i]),-Inf)) {
+      realmin <- min(dataframe[dataframe[i] != -Inf, i])
+      dataframe[dataframe[i] == -Inf, i] <- realmin
+    }
+    dataframe[i] <- scale(dataframe[i])
+  }
+  return(dataframe)
+}
