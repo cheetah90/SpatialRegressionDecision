@@ -1,4 +1,4 @@
-install.packages("spdep")
+if("spdep" %in% rownames(installed.packages()) == FALSE) {install.packages("spdep")}
 library(spdep)
 
 source("SpatialRegressionDecision/AssignSignificantCode.R")
@@ -22,18 +22,36 @@ usc7nn <- read.gwt2nb("inputdata/USCounties_7nn.gwt", region.id=usc$FIPS)
 
 UnivariateSAR(DataFrame = usc, Neighbor = usc7nn, startDVcolumn = 23, endDVcolumn = 24, startIVcolnum = 7, endIVcolnum - 13)
 
-usc$UrbanPop_P <- scale(usc$UrbanPop_P)
-usc$MedAge <- scale(usc$MedAge)
-usc$VoteRate4D <- scale(usc$VoteRate4D)
-#BachelorAb
-usc <-logScaleZeroesToMin(dataframe = usc, startcolnum = 12, endcolnum = 12)
-#HouMedInco
-usc <-logScaleZeroesToMin(dataframe = usc, startcolnum = 9, endcolnum = 9)
-#EnglishAtH
-usc <- logScaleZeroesToMinPosSkewSqrt(dataframe = usc, startcolnum = 10, endcolnum = 10)
-#NonHispani
-usc <- logScaleZeroesToMinPosSkewSqrt(dataframe = usc, startcolnum = 8, endcolnum = 8)
+logScaleZeroesToMinNegSkew <- function(dataframe, startcolnum, endcolnum) {
+  #@params
+  #dataframe: R data frame
+  #startcolnum: column index number of first column in dataframe to be transformed
+  #endcolnum: column index number of last column in dataframe to be transformed
+  
+  for(i in startcolnum:endcolnum) {
+    dataframe[i] <- log10(dataframe[i])
+    if (identical(min(dataframe[i]),-Inf)) {
+      realmin <- min(dataframe[dataframe[i] != -Inf, i])
+      dataframe[dataframe[i] == -Inf, i] <- realmin
+    }
+    dataframe[i] <- scale(dataframe[i])
+  }
+  return(dataframe)
+}
 
+
+logScaleZeroesToMinNegSkewSqrt <- function(dataframe, startcolnum, endcolnum) {
+  #@params
+  #dataframe: R data frame
+  #startcolnum: column index number of first column in dataframe to be transformed
+  #endcolnum: column index number of last column in dataframe to be transformed
+  
+  for(i in startcolnum:endcolnum) {
+    dataframe[i] <- sqrt(dataframe[i])
+    dataframe[i] <- scale(dataframe[i])
+  }
+  return(dataframe)
+}
 
 
 logScaleZeroesToMinPosSkew <- function(dataframe, startcolnum, endcolnum) {
@@ -43,8 +61,8 @@ logScaleZeroesToMinPosSkew <- function(dataframe, startcolnum, endcolnum) {
   #endcolnum: column index number of last column in dataframe to be transformed
   
   for(i in startcolnum:endcolnum) {
-    max = max(dataframe[i]) + 1
-    dataframe[i] <- log10(max - dataframe[i])
+    k = max(dataframe[i]) + 1
+    dataframe[i] <- log10(k - dataframe[i])
     if (identical(min(dataframe[i]),-Inf)) {
       realmin <- min(dataframe[dataframe[i] != -Inf, i])
       dataframe[dataframe[i] == -Inf, i] <- realmin
@@ -63,10 +81,6 @@ logScaleZeroesToMinPosSkewSqrt <- function(dataframe, startcolnum, endcolnum) {
   for(i in startcolnum:endcolnum) {
     max = max(dataframe[i]) + 1
     dataframe[i] <- sqrt(max - dataframe[i])
-    if (identical(min(dataframe[i]),-Inf)) {
-      realmin <- min(dataframe[dataframe[i] != -Inf, i])
-      dataframe[dataframe[i] == -Inf, i] <- realmin
-    }
     dataframe[i] <- scale(dataframe[i])
   }
   return(dataframe)
