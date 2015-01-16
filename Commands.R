@@ -22,22 +22,19 @@ usc7nn <- read.gwt2nb("inputdata/USCounties_7nn.gwt", region.id=usc$FIPS)
 
 UnivariateSAR(DataFrame = usc, Neighbor = usc7nn, startDVcolumn = 23, endDVcolumn = 24, startIVcolnum = 7, endIVcolnum - 13)
 
-logScaleZeroesToMin <- function(dataframe, startcolnum, endcolnum) {
-  #@params
-  #dataframe: R data frame
-  #startcolnum: column index number of first column in dataframe to be transformed
-  #endcolnum: column index number of last column in dataframe to be transformed
-  
-  for(i in startcolnum:endcolnum) {
-    dataframe[i] <- log10(dataframe[i])
-    if (identical(min(dataframe[i]),-Inf)) {
-      realmin <- min(dataframe[dataframe[i] != -Inf, i])
-      dataframe[dataframe[i] == -Inf, i] <- realmin
-    }
-    dataframe[i] <- scale(dataframe[i])
-  }
-  return(dataframe)
-}
+usc$UrbanPop_P <- scale(usc$UrbanPop_P)
+usc$MedAge <- scale(usc$MedAge)
+usc$VoteRate4D <- scale(usc$VoteRate4D)
+#BachelorAb
+usc <-logScaleZeroesToMin(dataframe = usc, startcolnum = 12, endcolnum = 12)
+#HouMedInco
+usc <-logScaleZeroesToMin(dataframe = usc, startcolnum = 9, endcolnum = 9)
+#EnglishAtH
+usc <- logScaleZeroesToMinPosSkewSqrt(dataframe = usc, startcolnum = 10, endcolnum = 10)
+#NonHispani
+usc <- logScaleZeroesToMinPosSkewSqrt(dataframe = usc, startcolnum = 8, endcolnum = 8)
+
+
 
 logScaleZeroesToMinPosSkew <- function(dataframe, startcolnum, endcolnum) {
   #@params
