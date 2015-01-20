@@ -20,7 +20,7 @@ Prepare_MergeUGCdata <- function(df_TobeMerged,dfUGC,df_TotalPop, startColumn, e
 	
 	suffix<-paste("_",suffix)
 	
-	df_Merged<-merge(df_TobeMerged, dfUGC[c(1,startColumn:endColumn)], by.x="RowNum", by.y="RowNum", sort =TRUE, suffixes = c(".x",suffix))
+	df_Merged<-merge(df_TobeMerged, dfUGC[c(1,startColumn:endColumn)], by.x="RowNum", by.y="Universal.ID", sort =TRUE, suffixes = c(".x",suffix))
 	
 	df_Merged
 }
