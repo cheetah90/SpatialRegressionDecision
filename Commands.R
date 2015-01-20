@@ -21,8 +21,8 @@ usc <- read.csv("inputdata/usc_basedata.csv", header=TRUE)
 usc7nn <- read.gwt2nb("inputdata/USCounties_7nn.gwt", region.id=usc$FIPS)
 
 #For running Chinese analysis
-#cn_original<-read.csv("cn_SES_original.csv", header= TRUE)
-#cn_prepared<-read.csv("cn_SES_prepared.csv", header=TRUE)
+#cn_original<-read.csv("input/cn_SES_original.csv", header= TRUE)
+#cn_prepared<-read.csv("input/cn_SES_prepared.csv", header=TRUE)
 #
 
 
