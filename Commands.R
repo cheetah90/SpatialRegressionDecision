@@ -20,6 +20,12 @@ source("UnivariateSAR_csvoutput.R")
 usc <- read.csv("inputdata/usc_basedata.csv", header=TRUE)
 usc7nn <- read.gwt2nb("inputdata/USCounties_7nn.gwt", region.id=usc$FIPS)
 
+#For running Chinese analysis
+#cn_original<-read.csv("cn_SES_original.csv", header= TRUE)
+#cn_prepared<-read.csv("cn_SES_prepared.csv", header=TRUE)
+#
+
+
 UnivariateSAR(DataFrame = usc, Neighbor = usc7nn, startDVcolumn = 23, endDVcolumn = 24, startIVcolnum = 7, endIVcolnum - 13)
 
 logScaleZeroesToMinNegSkew <- function(dataframe, startcolnum, endcolnum) {
