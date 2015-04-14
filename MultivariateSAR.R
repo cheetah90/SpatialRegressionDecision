@@ -10,7 +10,7 @@ MultivariateSAR<-function(DataFrame, Neighbor, startDVcolnum, endDVcolnum, IVlis
 
 	outTable <- c()
 
-	for(m in startDVcolumn:endDVcolumn)
+	for(m in startDVcolnum:endDVcolnum)
 	{
 		DVname<-colnames(DataFrame)[m]
 		formulaReg<-formula(paste(DVname, "~", IVlist))
@@ -25,13 +25,13 @@ MultivariateSAR<-function(DataFrame, Neighbor, startDVcolnum, endDVcolnum, IVlis
 		print(formulaReg)
 		cat("\n")
 
-		outTable <- SpatialRegressionDecision(formulaReg, DataFrame, Neighbor, OutputName, outTable)
-
+		outTable <- SpatialRegressionDecision_Multivariate(formulaReg, DataFrame, Neighbor, OutputName, outTable)
 		cat("\n\n\n\n\n\n")
 
 	}
-
-	colnames(outTable) <- c("call", "Model_type", "Estimate of Coefficient (Pvalue)", "OLS_AdjustR^2", "SAR_PseudoR^2", "loglik/lm_loglik", "AIC/LM_AIC", "lambda_rho", "Wald_Test", "LR_Test")
+  names <-  c("call", "Model_type", "Intercept", "OLS_AdjustR^2", "SAR_PseudoR^2", "loglik/lm_loglik", "AIC/LM_AIC", "lambda_rho", "Wald_Test", "LR_Test")
+  for (IV in strsplit(IVlist, split=" + ", fixed=TRUE)) {names <- c(names, IV)}
+  colnames(outTable) <- names
 	write.csv(file=paste("MultivariateSAR.csv"),outTable)
 
 }
