@@ -135,7 +135,6 @@ SpatialRegressionDecision_Multivariate<-function(Formula, DataFrame, Neighbor, O
 	cat("==============================\n\n\n", file=OutputName, append=TRUE)
 	
 	SARResult
-	cat(SARResult$type)
 	#Decide if SAR or OLS is run and construct the output Table
 	if(!is.null(SARResult$type))
 	{
@@ -162,13 +161,16 @@ SpatialRegressionDecision_Multivariate<-function(Formula, DataFrame, Neighbor, O
                 rc <- lm.LMtests(model = SARResult$residuals, listw=ListW)
 	
 		#Note that "-"/negative sign at the beginning of a cell will cause Excel to treat the cell as a formula. To avoid this, a space is added at the beginning of a cell
-		outTable<- rbind(outTable, c(Formula, SARResult$type, paste0(round(SARResult$coefficients[1],4), Helper_AssignSignCode(EstimatepValue[1])), round(summary(OLS)$adj.r.squared,4), round(PseudoRSquared, 4), paste0(" ",round(SARResult$LL,4),"/", round(SARResult$logLik_lm.model,4)), paste0(round(AIC(SARResult),4),"/",round(SARResult$AIC_lm.model,4)), round(SpatialAutoregressiveCoefficient,4), paste0(round(Wald1.sarlm(SARResult)$statistic,4),Helper_AssignSignCode(Wald1.sarlm(SARResult)$p.value)),paste0(round(LR1.sarlm(SARResult)$statistic,4),Helper_AssignSignCode(LR1.sarlm(SARResult)$p.value)),paste0(bp$statistic, Helper_AssignSignCode(bp$p.value)), paste0(round(rc$LMErr$statistic[1],4),Helper_AssignSignCode(rc$LMErr$p.value[1]))))
-		for (i in 2:length(SARResult$coefficients)) {outTable <- cbind(outTable, paste0(round(SARResult$coefficients[i],4),Helper_AssignSignCode(EstimatepValue[i])))}
+		IVcoefs <- c()
+                for (i in 2:length(SARResult$coefficients)) {IVcoefs <- cbind(IVcoefs, paste0(round(SARResult$coefficients[i],4),Helper_AssignSignCode(EstimatepValue[i])))}
+                outTable<- rbind(outTable, c(Formula, SARResult$type, paste0(round(SARResult$coefficients[1],4), Helper_AssignSignCode(EstimatepValue[1])), round(summary(OLS)$adj.r.squared,4), round(PseudoRSquared, 4), paste0(" ",round(SARResult$LL,4),"/",round(SARResult$logLik_lm.model,4)), paste0(round(AIC(SARResult),4),"/",round(SARResult$AIC_lm.model,4)), round(SpatialAutoregressiveCoefficient,4), paste0(round(Wald1.sarlm(SARResult)$statistic,4),Helper_AssignSignCode(Wald1.sarlm(SARResult)$p.value)), paste0(round(LR1.sarlm(SARResult)$statistic,4),Helper_AssignSignCode(LR1.sarlm(SARResult)$p.value)), paste0(round(bp$statistic,4), Helper_AssignSignCode(bp$p.value)), paste0(round(rc$LMerr$statistic[1],4),Helper_AssignSignCode(rc$LMerr$p.value[1])),IVcoefs))
+		cat(dim(outTable))
 	}
 	else
 	{
 		#If OLS is used, report partial results
-		outTable<- rbind(outTable, c(Formula, "OLSResult", paste0(OLS$coefficients[2],Helper_EvaluatePvalue(summary(OLS)$coefficients[2,4])), summary(OLS)$adj.r.squared, "LogLik_PH", "AIC_PH", "SAC_PH", "WaldT_PH", "LRTest_PH"))
+		outTable<- rbind(outTable, c(Formula, "OLSResult", paste0(OLS$coefficients[1],Helper_EvaluatePvalue(summary(OLS)$coefficients[1,4])), summary(OLS)$adj.r.squared, "LogLik_PH", "AIC_PH", "SAC_PH", "WaldT_PH", "LRTest_PH","BPTest_PH","LMErrTest_PH"))
+                for (i in 2:length(OLS$coefficients)) {outTable <- cbind(outTable, paste0(round(OLS$coefficients[i],4),Helper_AssignSignCode(summary(OLS)$coefficients[i,4])))}
 	}
 	return(outTable)
 }
