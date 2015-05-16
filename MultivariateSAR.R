@@ -31,11 +31,10 @@ MultivariateSAR<-function(DataFrame, Neighbor, startDVcolnum, endDVcolnum, IVlis
     outTable
 
 	}
-  names <-  c("call", "Model_type", "Intercept", "OLS_AdjustR^2", "SAR_PseudoR^2", "loglik/lm_loglik", "AIC/LM_AIC", "lambda_rho", "Wald_Test", "LR_Test", "BPTest", "LMError")
-  for (IV in strsplit(IVlist, split=" + ", fixed=TRUE)) {names <- c(names, IV)}
-  cat(dim(names))
-  names
-  colnames(outTable) <- names
+  tablenames <-  c("call", "Model_type", "Intercept", "OLS_AdjustR^2", "SAR_PseudoR^2", "loglik/lm_loglik", "AIC/LM_AIC", "lambda_rho", "Wald_Test", "LR_Test", "BPTest", "LMError")
+  for (IV in strsplit(IVlist, split="+", fixed=TRUE)) {tablenames <- c(tablenames, IV)}
+  cat(length(tablenames))
+  colnames(outTable) <- tablenames
 	write.csv(file=paste("MultivariateSAR.csv"),outTable)
 
 }
