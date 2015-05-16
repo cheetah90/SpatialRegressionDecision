@@ -169,8 +169,10 @@ SpatialRegressionDecision_Multivariate<-function(Formula, DataFrame, Neighbor, O
 	else
 	{
 		#If OLS is used, report partial results
-		outTable<- rbind(outTable, c(Formula, "OLSResult", paste0(OLS$coefficients[1],Helper_AssignSignCode(summary(OLS)$coefficients[1,4])), summary(OLS)$adj.r.squared, "LogLik_PH", "AIC_PH", "SAC_PH", "WaldT_PH", "LRTest_PH","BPTest_PH","LMErrTest_PH"))
-                for (i in 2:length(OLS$coefficients)) {outTable <- cbind(outTable, paste0(round(OLS$coefficients[i],4),Helper_AssignSignCode(summary(OLS)$coefficients[i,4])))}
+		IVcoefs <- c()
+		for (i in 2:length(OLS$coefficients)) {IVcoefs <- cbind(IVcoefs, paste0(round(OLS$coefficients[i],4),Helper_AssignSignCode(summary(OLS)$coefficients[i,4])))}
+		outTable<- rbind(outTable, c(Formula, "OLSResult", paste0(OLS$coefficients[1],Helper_AssignSignCode(summary(OLS)$coefficients[1,4])), summary(OLS)$adj.r.squared, "PseudoRSquare", "LogLik_PH", "AIC_PH", "lambda_rho", "WaldT_PH", "LRTest_PH","BPTest_PH","LMErrTest_PH", IVcoefs))
+                
 	}
 	return(outTable)
 }
