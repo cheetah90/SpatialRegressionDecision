@@ -49,7 +49,7 @@ logScaleZeroesToMinPositiveSkew <- function(dataframe, startcolnum, endcolnum) {
 }
 
 
-sqrtScaleZeroesToMinNegSkewSqrt <- function(dataframe, startcolnum, endcolnum) {
+sqrtScaleZeroesToMinPositiveSkewSqrt <- function(dataframe, startcolnum, endcolnum) {
   #@params
   #dataframe: R data frame
   #startcolnum: column index number of first column in dataframe to be transformed
@@ -81,7 +81,7 @@ logScaleZeroesToMinNegativeSkew <- function(dataframe, startcolnum, endcolnum) {
   return(dataframe)
 }
 
-sqrtScaleZeroesToMinSkewSqrt <- function(dataframe, startcolnum, endcolnum) {
+sqrtScaleZeroesToMinNegativeSkewSqrt <- function(dataframe, startcolnum, endcolnum) {
   #@params
   #dataframe: R data frame
   #startcolnum: column index number of first column in dataframe to be transformed
