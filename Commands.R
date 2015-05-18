@@ -31,7 +31,7 @@ cn_merged<-Prepare_MergeUGCdata(cn_merged, cn_Wiki_zh, cn_original, 3,9,"zh")
 
 UnivariateSAR(DataFrame = usc, Neighbor = usc7nn, startDVcolumn = 23, endDVcolumn = 24, startIVcolnum = 7, endIVcolnum - 13)
 
-logScaleZeroesToMinPositiveSkew <- function(dataframe, startcolnum, endcolnum) {
+logScaleZeroesToMinPosSkew <- function(dataframe, startcolnum, endcolnum) {
   #@params
   #dataframe: R data frame
   #startcolnum: column index number of first column in dataframe to be transformed
@@ -63,7 +63,7 @@ sqrtScaleZeroesToMinPositiveSkewSqrt <- function(dataframe, startcolnum, endcoln
 }
 
 
-logScaleZeroesToMinNegativeSkew <- function(dataframe, startcolnum, endcolnum) {
+logScaleZeroesToMinNegSkew <- function(dataframe, startcolnum, endcolnum) {
   #@params
   #dataframe: R data frame
   #startcolnum: column index number of first column in dataframe to be transformed
