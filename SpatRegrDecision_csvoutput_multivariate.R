@@ -1,6 +1,6 @@
 SpatialRegressionDecision_Multivariate<-function(Formula, DataFrame, Neighbor, OutputName, outTable){
 	#Function to make decision and run the proper spatial regression model
-	
+
 	#Argument Specification
 	#Runs through logical decision tree for choosing appropriate univariate (spatial) regressions with Wikipedia data
 	#Formula: e.g. CRIME ~ INC + HOVAL
@@ -10,80 +10,81 @@ SpatialRegressionDecision_Multivariate<-function(Formula, DataFrame, Neighbor, O
 
 	#Reload the spdep in case it is not loaded
 	library(spdep)
-	
+
 	#Running the OLS
 	cat("Running Classic OLS Regression...\n")
 	OLS<-lm(Formula, data=DataFrame)
-	
+
 	#Write the formula
 	capture.output(print(Formula),file=OutputName, append=TRUE)
 	cat("\n\n\n", file=OutputName, append=TRUE)
-	
+
 	#Write OLS Regression Result to the file
 	cat("==============================\nOLS Regression Result:\n",file=OutputName, append=TRUE)
 	capture.output(summary(OLS),file=OutputName, append=TRUE)
 	cat("==============================\n\n\n", file=OutputName, append=TRUE)
-	
+
 	#Build the spatial weight list
 	ListW<-nb2listw(Neighbor)
-	
+
 	#Moran's I test for spatial autocorrelation in OLS residual
 	cat("Running Moran's I test on Classic OLS Regression's residual ...\n")
 	ResidualMoranTest<-lm.morantest(OLS, ListW)
-	
+
 	#print(ResidualMoranTest)
-	
+
 	ResidualMoranP<-ResidualMoranTest$p.value
-	
+
 	cat("==============================\nMoran's I test against the OLS regression residual:\n",file=OutputName, append=TRUE)
-	
+
 	#Checks for significance in spatial autocorrelation
 	if(ResidualMoranP<0.05)
 	{
 		cat("P-value for OLS Regression Residual Moran's I test is: ", ResidualMoranP, ", and it's significant. Run Lagrangian Multipler Test to decide which SAR model to use\n")
 		capture.output(print(ResidualMoranTest),file=OutputName, append=TRUE)
 		cat("==============================\n\n\n", file=OutputName, append=TRUE)
-		
+
 		#Run Lagrangian Multipler Test
 		cat("Running Lagrangian Multiplier Test ...\n")
 		LagrangianTest <- lm.LMtests(OLS,ListW, test="all")
-		
+
 		#Write Lagrangian Test Result to the file
 		cat("==============================\nLagrangian Multiplier Test on the OLS Regression Result:\n",file=OutputName, append=TRUE)
 		capture.output(print(LagrangianTest),file=OutputName, append=TRUE)
 		cat("==============================\n\n\n", file=OutputName, append=TRUE)
-		
+
 		#Output the p-value of Lagrangian Multiplier Test
 		cat("p-value of LMerr is: ", LagrangianTest$LMerr$p.value, "p-value of LMlag is: ", LagrangianTest$LMlag$p.value,"\n")
-		
-		#LM values for both spatial lag and error models are significant	
+
+		#LM values for both spatial lag and error models are significant
 		if(LagrangianTest$LMerr$p.value<0.05 & LagrangianTest$LMlag$p.value<0.05)
 		{
 			cat("Both LMerr and LMlag are significant. Compare Robust LMerr and Robust LMlag\n")
 			cat("p-value of Robust LMerr is: ", LagrangianTest$LMerr$p.value, "... p-value of Robust LMlag is: ", LagrangianTest$LMlag$p.value, "\n")
-			
+
 			#If both LMerr and LMlag are significant, check if RLMerr or RLMlag are significant
 			if(LagrangianTest$RLMerr$p.value<0.05 | LagrangianTest$RLMlag$p.value<0.05)
 			{
-				if(LagrangianTest$RLMlag$p.value < LagrangianTest$RLMerr$p.value)
+				# In the case where both Robust LM tests are significant, use the test statistic to decide
+				if(LagrangianTest$RLMlag$statistic > LagrangianTest$RLMerr$statistic)
 				{
-					cat("Robust LMlag is more significant! Use SAR Lag Model\n")
+					cat("Robust LMlag test statistic is higher! Use SAR Lag Model\n")
 					SARResult<-lagsarlm(Formula, data=DataFrame, ListW)
 				}
 				else
 				{
-					cat("Robust LMerror is more significant! Use SAR Error Model\n")
+					cat("Robust LMerror test statistic is higher! Use SAR Error Model\n")
 					SARResult<-errorsarlm(Formula, data=DataFrame, ListW)
 				}
 			}
 			#Neither RLMerror nor RLMlag are significant. The more significant model is still run for data.
 			else
 			{
-				cat("Neither Robust are significant. Model misspecification. Smaller p-value will be run but results should be evaluated.")
-				cat("==============================\nNeither Robust are significant. Model misspecification. Smaller p-value will be run but results should be evaluated:\n",file=OutputName, append=TRUE)
+				cat("Neither Robust are significant. Model misspecification. Higher robust test statistic will be run but results should be evaluated.")
+				cat("==============================\nNeither Robust are significant. Model misspecification. Higher robust test statistic will be run but results should be evaluated:\n",file=OutputName, append=TRUE)
 				cat("==============================\n\n\n", file=OutputName, append=TRUE)
-				
-				if(LagrangianTest$RLMerr$p.value < LagrangianTest$RLMlag$p.value)
+
+				if(LagrangianTest$RLMerr$statistic > LagrangianTest$RLMlag$statistic)
 				{
 					SARResult<-errorsarlm(Formula, data=DataFrame, ListW)
 				}
@@ -93,7 +94,7 @@ SpatialRegressionDecision_Multivariate<-function(Formula, DataFrame, Neighbor, O
 				}
 			}
 		}
-		
+
 		#LM values for only one of the lag or error models is significant
 		else if(LagrangianTest$LMerr$p.value<0.05 | LagrangianTest$LMlag$p.value<0.05)
 		{
@@ -110,7 +111,7 @@ SpatialRegressionDecision_Multivariate<-function(Formula, DataFrame, Neighbor, O
 				SARResult<-errorsarlm(Formula, data=DataFrame, ListW)
 			}
 		}
-		
+
 		#Neither LM values for lag nor error were significant. OLS result retained.
 		else
 		{
@@ -120,32 +121,32 @@ SpatialRegressionDecision_Multivariate<-function(Formula, DataFrame, Neighbor, O
 			SARResult<-OLS
 		}
 	}
-	
+
 	#Moran's I does not indicate spatial autocorrelation in OLS residuals
 	else
 	{
 		cat("P-value for OLS Residual Moran's I test is: ", ResidualMoranP, ", and it's NOT significant. Stop and use OLS\n")
 		cat("==============================\n","P-value for OLS Residual Moran's I test is: ", ResidualMoranP, ", and it's NOT significant. Stop and use OLS\n", file=OutputName, append=TRUE)
 		SARResult<-OLS
-	}	
-	
+	}
+
 	#Write the Final Regression Result to the file
 	cat("==============================\n The Final Regression Result:\n",file=OutputName, append=TRUE)
 	capture.output(summary(SARResult),file=OutputName, append=TRUE)
 	cat("==============================\n\n\n", file=OutputName, append=TRUE)
-	
+
 	SARResult
 	#Decide if SAR or OLS is run and construct the output Table
 	if(!is.null(SARResult$type))
 	{
 		#Parse the DV Name from the formula
 		DVname<-paste0(as.list(attr(terms(Formula), "variables"))[2])
-			
+
 		#Compute the Pseudo-R^2
 		SARResult.fitted<-fitted.values(SARResult)
 		SARResult.lm<- lm(DataFrame[,DVname] ~ SARResult.fitted)
 		PseudoRSquared<-summary(SARResult.lm)$r.squared
-		
+
 		#If SAR is used, report the result
 		if(SARResult$type == "error")
 		{
@@ -155,11 +156,11 @@ SpatialRegressionDecision_Multivariate<-function(Formula, DataFrame, Neighbor, O
 		{
 			SpatialAutoregressiveCoefficient<-SARResult$rho
 		}
-	
+
 		EstimatepValue<-2 * (1 - pnorm(abs(SARResult$coefficients/SARResult$rest.se)))
                 bp <- bptest.sarlm(SARResult)
                 rc <- lm.LMtests(model = SARResult$residuals, listw=ListW)
-	
+
 		#Note that "-"/negative sign at the beginning of a cell will cause Excel to treat the cell as a formula. To avoid this, a space is added at the beginning of a cell
 		IVcoefs <- c()
                 for (i in 2:length(SARResult$coefficients)) {IVcoefs <- cbind(IVcoefs, paste0(round(SARResult$coefficients[i],4),Helper_AssignSignCode(EstimatepValue[i])))}
@@ -172,7 +173,7 @@ SpatialRegressionDecision_Multivariate<-function(Formula, DataFrame, Neighbor, O
 		IVcoefs <- c()
 		for (i in 2:length(OLS$coefficients)) {IVcoefs <- cbind(IVcoefs, paste0(round(OLS$coefficients[i],4),Helper_AssignSignCode(summary(OLS)$coefficients[i,4])))}
 		outTable<- rbind(outTable, c(Formula, "OLSResult", paste0(OLS$coefficients[1],Helper_AssignSignCode(summary(OLS)$coefficients[1,4])), summary(OLS)$adj.r.squared, "PseudoRSquare", "LogLik_PH", "AIC_PH", "lambda_rho", "WaldT_PH", "LRTest_PH","BPTest_PH","LMErrTest_PH", IVcoefs))
-                
+
 	}
 	return(outTable)
 }
