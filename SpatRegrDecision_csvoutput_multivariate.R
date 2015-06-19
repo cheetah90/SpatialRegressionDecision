@@ -1,4 +1,4 @@
-SpatialRegressionDecision_Multivariate<-function(Formula, DataFrame, Neighbor, OutputName, outTable){
+SpatialRegressionDecision_Multivariate<-function(Formula, DataFrame, Neighbor, OutputName, outTable, res){
 	#Function to make decision and run the proper spatial regression model
 
 	#Argument Specification
@@ -165,15 +165,17 @@ SpatialRegressionDecision_Multivariate<-function(Formula, DataFrame, Neighbor, O
 		IVcoefs <- c()
                 for (i in 2:length(SARResult$coefficients)) {IVcoefs <- cbind(IVcoefs, paste0(round(SARResult$coefficients[i],4),Helper_AssignSignCode(EstimatepValue[i])))}
                 outTable<- rbind(outTable, c(Formula, SARResult$type, paste0(round(SARResult$coefficients[1],4), Helper_AssignSignCode(EstimatepValue[1])), round(summary(OLS)$adj.r.squared,4), round(PseudoRSquared, 4), paste0(" ",round(SARResult$LL,4),"/",round(SARResult$logLik_lm.model,4)), paste0(round(AIC(SARResult),4),"/",round(SARResult$AIC_lm.model,4)), round(SpatialAutoregressiveCoefficient,4), paste0(round(Wald1.sarlm(SARResult)$statistic,4),Helper_AssignSignCode(Wald1.sarlm(SARResult)$p.value)), paste0(round(LR1.sarlm(SARResult)$statistic,4),Helper_AssignSignCode(LR1.sarlm(SARResult)$p.value)), paste0(round(bp$statistic,4), Helper_AssignSignCode(bp$p.value)), paste0(round(rc$LMerr$statistic[1],4),Helper_AssignSignCode(rc$LMerr$p.value[1])),IVcoefs))
-		cat(dim(outTable))
-	}
+	    res <- cbind(res, SARResult$residuals)
+    }
 	else
 	{
 		#If OLS is used, report partial results
 		IVcoefs <- c()
 		for (i in 2:length(OLS$coefficients)) {IVcoefs <- cbind(IVcoefs, paste0(round(OLS$coefficients[i],4),Helper_AssignSignCode(summary(OLS)$coefficients[i,4])))}
 		outTable<- rbind(outTable, c(Formula, "OLSResult", paste0(OLS$coefficients[1],Helper_AssignSignCode(summary(OLS)$coefficients[1,4])), summary(OLS)$adj.r.squared, "PseudoRSquare", "LogLik_PH", "AIC_PH", "lambda_rho", "WaldT_PH", "LRTest_PH","BPTest_PH","LMErrTest_PH", IVcoefs))
+        res <- cbind(res, OLS$residuals)
 
 	}
-	return(outTable)
+    colnames(res)[length(colnames(res))] <- all.vars(Formula)[1]
+	return(list('outTable'=outTable, 'res'=res))
 }
