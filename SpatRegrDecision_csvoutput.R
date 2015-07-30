@@ -166,7 +166,7 @@ SpatialRegressionDecision<-function(Formula, DataFrame, Neighbor, OutputName, ou
 	else
 	{
 		#If OLS is used, report partial results
-		outTable<- rbind(outTable, c(Formula, "OLSResult", paste0(OLS$coefficients[2],Helper_AssignSignCode(summary(OLS)$coefficients[2,4])), summary(OLS)$adj.r.squared, "LogLik_PH", "AIC_PH", "SAC_PH", "WaldT_PH", "LRTest_PH"))
+		outTable<- rbind(outTable, c(Formula, "OLSResult", paste0(OLS$coefficients[2],Helper_AssignSignCode(summary(OLS)$coefficients[2,4])), summary(OLS)$adj.r.squared, "PseudoRSquared", "LogLik_PH", "AIC_PH", "SAC_PH", "WaldT_PH", "LRTest_PH"))
 	}
 	return(outTable)
 }
