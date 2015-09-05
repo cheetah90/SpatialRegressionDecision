@@ -94,3 +94,13 @@ sqrtScaleZeroesToMinNegativeSkewSqrt <- function(dataframe, startcolnum, endcoln
   }
   return(dataframe)
 }
+
+#The function to compute column-wise StDev for a data frame
+dfColSds<-function(DataFrame, startColumn, endColumn){
+	#params
+	#DataFrame: R data frame
+	#startColumn: the
+	
+	tp_matrix<-as.matrix(DataFrame[,startColumn:endColumn])
+	apply(tp_matrix, 2, sd)
+}
